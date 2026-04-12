@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
+struct HomeView: View {
 	@Environment(\.modelContext) private var modelContext
 	@Query(sort: \Song.lastPlayedAt, order: .reverse) private var songs: [Song]
 
@@ -23,6 +23,6 @@ struct ContentView: View {
 }
 
 #Preview {
-	ContentView()
+	HomeView()
 		.modelContainer(for: [Song.self, Album.self], inMemory: true)
 }
