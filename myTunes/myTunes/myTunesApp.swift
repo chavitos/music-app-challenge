@@ -26,7 +26,12 @@ struct myTunesApp: App {
 
 	var body: some Scene {
 		WindowGroup {
-			HomeView()
+			HomeView(
+				viewModel: HomeViewModel(
+					provider: RemoteSongsProvider(),
+					modelContext: sharedModelContainer.mainContext
+				)
+			)
 		}
 		.modelContainer(sharedModelContainer)
 	}
