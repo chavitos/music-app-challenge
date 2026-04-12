@@ -10,11 +10,11 @@ import SwiftData
 
 struct HomeView: View {
 	@State private var viewModel: HomeViewModel
-	
+
 	init(viewModel: HomeViewModel) {
 		_viewModel = State(initialValue: viewModel)
 	}
-	
+
 	var body: some View {
 		NavigationStack {
 			List(viewModel.songs) { song in
@@ -36,14 +36,20 @@ struct HomeView: View {
 					await viewModel.searchSongs()
 				}
 			}
-			.searchable(text: $viewModel.searchText, placement: .navigationBarDrawer, prompt: "Search")
+			.searchable(
+				text: $viewModel.searchText,
+				placement: .navigationBarDrawer(displayMode: .automatic),
+				prompt: "Search"
+			)
 			.navigationDestination(item: $viewModel.selectedSong) { song in
 				PlayerView(song: song)
 			}
 			.scrollContentBackground(.hidden)
-			.background(.black)
-			.listItemTint(.white)
+			.background(Color.appBackground)
+			.toolbarColorScheme(.dark, for: .navigationBar)
+			.toolbarBackground(Color.appBackground, for: .navigationBar)
 		}
+		.preferredColorScheme(.dark)
 	}
 }
 

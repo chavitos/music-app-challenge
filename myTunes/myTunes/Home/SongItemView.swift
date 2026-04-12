@@ -10,12 +10,12 @@ import SwiftUI
 struct SongItemView: View {
 	private var song: Song
 	private var onTapSongOptions: () -> Void
-	
+
 	init(song: Song, onTapSongOptions: @escaping () -> Void) {
 		self.song = song
 		self.onTapSongOptions = onTapSongOptions
 	}
-	
+
 	var body: some View {
 		HStack {
 			if let artworkUrl = URL(string: song.artworkUrl) {
@@ -49,30 +49,30 @@ struct SongItemView: View {
 					.cornerRadius(8)
 					.padding(.trailing, 16)
 			}
-			
+
 			VStack(alignment: .leading) {
 				Text(song.trackName)
 					.font(.custom("Articulat CF Medium", size: 16))
 					.fontWeight(.medium)
-					.foregroundColor(.white)
+					.foregroundColor(Color.appPrimaryText)
 					.padding(.bottom, 4)
 				Text(song.artistName)
 					.font(.custom("ArticulatCF-Medium", size: 12))
 					.fontWeight(.medium)
-					.foregroundColor(.gray)
+					.foregroundColor(Color.appSecondaryText)
 			}
 			Spacer()
-			
+
 			Button {
 				onTapSongOptions()
 			} label: {
 				Text("...")
 					.fontWeight(.bold)
-					.foregroundColor(.gray)
+					.foregroundColor(Color.appSecondaryText)
 			}
 			.buttonStyle(.borderless)
 		}
-		.listRowBackground(Color.black)
-		.background(.black)
+		.listRowBackground(Color.appBackground)
+		.background(Color.appBackground)
 	}
 }
