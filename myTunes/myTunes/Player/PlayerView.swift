@@ -45,6 +45,17 @@ struct PlayerView: View {
 			}
 
 			Spacer()
+				.frame(height: 48)
+
+			Button {
+				viewModel.playOrPause()
+			} label: {
+				Image(systemName: viewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+					.font(.system(size: 64))
+					.symbolRenderingMode(.hierarchical)
+			}
+
+			Spacer()
 		}
 		.frame(maxWidth: .infinity)
 		.navigationTitle(viewModel.song.collectionName)

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 @Observable
 final class PlayerViewModel {
@@ -17,6 +18,11 @@ final class PlayerViewModel {
 	var isRepeating = false
 	var currentTime: TimeInterval = 0
 	var duration: TimeInterval = 0
+
+	// MARK: - Private
+
+	nonisolated private var player: AVPlayer?
+	nonisolated private var timeObserver: Any?
 
 	// MARK: - Computed
 
@@ -32,10 +38,28 @@ final class PlayerViewModel {
 		self.duration = Double(song.trackTimeMillis) / 1000.0
 	}
 
+	deinit {
+		if let timeObserver {
+			player?.removeTimeObserver(timeObserver)
+		}
+		player?.pause()
+	}
+
 	// MARK: - Use Cases
 
 	func playOrPause() {
-		// TODO: Implement
+		if player == nil {
+			setupPlayer()
+		}
+
+		guard let player else { return }
+
+		if isPlaying {
+			player.pause()
+		} else {
+			player.play()
+		}
+		isPlaying.toggle()
 	}
 
 	func nextSong() {
@@ -48,5 +72,27 @@ final class PlayerViewModel {
 
 	func setRepeat() {
 		// TODO: Implement
+	}
+
+	// MARK: - Private
+
+	private func setupPlayer() {
+		guard let urlString = song.previewUrl,
+			  let url = URL(string: urlString) else { return }
+
+		let playerItem = AVPlayerItem(url: url)
+		player = AVPlayer(playerItem: playerItem)
+
+		timeObserver = player?.addPeriodicTimeObserver(
+			forInterval: CMTime(seconds: 0.5, preferredTimescale: 600),
+			queue: .main
+		) { [weak self] time in
+			guard let self else { return }
+			self.currentTime = time.seconds
+			if let itemDuration = self.player?.currentItem?.duration,
+			   itemDuration.isNumeric {
+				self.duration = itemDuration.seconds
+			}
+		}
 	}
 }
