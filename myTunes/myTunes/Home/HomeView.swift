@@ -21,10 +21,16 @@ struct HomeView: View {
 				SongItemView(song: song) {
 					print("options tapped")
 				}
+				.listRowSeparator(.hidden)
+				.listRowInsets(EdgeInsets())
+				.padding(.bottom, 16)
 				.onTapGesture {
 					viewModel.selectSong(song)
 				}
 			}
+			.padding(.leading, 24)
+			.padding(.trailing, 16)
+			.padding(.top, 8)
 			.navigationTitle("Songs")
 			.task(id: viewModel.searchText) {
 				try? await Task.sleep(for: .milliseconds(300))
@@ -44,7 +50,9 @@ struct HomeView: View {
 			.navigationDestination(item: $viewModel.selectedSong) { song in
 				PlayerView(song: song)
 			}
+			.listStyle(.plain)
 			.scrollContentBackground(.hidden)
+			.scrollIndicators(.hidden)
 			.background(Color.appBackground)
 			.toolbarColorScheme(.dark, for: .navigationBar)
 			.toolbarBackground(Color.appBackground, for: .navigationBar)
