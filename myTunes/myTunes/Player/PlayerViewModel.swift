@@ -21,8 +21,10 @@ final class PlayerViewModel {
 
 	// MARK: - Private
 
-	nonisolated private var player: AVPlayer?
-	nonisolated private var timeObserver: Any?
+	@ObservationIgnored
+	nonisolated(unsafe) private var player: AVPlayer?
+	@ObservationIgnored
+	nonisolated(unsafe) private var timeObserver: Any?
 
 	// MARK: - Computed
 
@@ -88,10 +90,12 @@ final class PlayerViewModel {
 			queue: .main
 		) { [weak self] time in
 			guard let self else { return }
-			self.currentTime = time.seconds
-			if let itemDuration = self.player?.currentItem?.duration,
-			   itemDuration.isNumeric {
-				self.duration = itemDuration.seconds
+			Task { @MainActor in
+				self.currentTime = time.seconds
+				if let itemDuration = self.player?.currentItem?.duration,
+				   itemDuration.isNumeric {
+					self.duration = itemDuration.seconds
+				}
 			}
 		}
 	}

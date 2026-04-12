@@ -10,30 +10,39 @@ import SwiftData
 
 struct HomeView: View {
 	@State private var viewModel: HomeViewModel
-
+	
 	init(viewModel: HomeViewModel) {
 		_viewModel = State(initialValue: viewModel)
 	}
-
+	
 	var body: some View {
 		NavigationStack {
 			List(viewModel.songs) { song in
-				Button {
+				SongItemView(song: song) {
+					print("options tapped")
+				}
+				.onTapGesture {
 					viewModel.selectSong(song)
-				} label: {
-					Text(song.trackName)
 				}
 			}
 			.navigationTitle("Songs")
-			.searchable(text: $viewModel.searchText, prompt: "Search")
 			.task(id: viewModel.searchText) {
 				try? await Task.sleep(for: .milliseconds(300))
 				guard !Task.isCancelled else { return }
 				await viewModel.searchSongs()
 			}
+			.onAppear {
+				Task {
+					await viewModel.searchSongs()
+				}
+			}
+			.searchable(text: $viewModel.searchText, placement: .navigationBarDrawer, prompt: "Search")
 			.navigationDestination(item: $viewModel.selectedSong) { song in
 				PlayerView(song: song)
 			}
+			.scrollContentBackground(.hidden)
+			.background(.black)
+			.listItemTint(.white)
 		}
 	}
 }
