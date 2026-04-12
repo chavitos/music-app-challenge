@@ -32,8 +32,7 @@ struct HomeView: View {
 				await viewModel.searchSongs()
 			}
 			.navigationDestination(item: $viewModel.selectedSong) { song in
-				// TODO: Replace with PlayerView
-				Text(song.trackName)
+				PlayerView(song: song)
 			}
 		}
 	}
