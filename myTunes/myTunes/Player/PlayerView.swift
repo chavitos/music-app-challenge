@@ -13,28 +13,38 @@ struct PlayerView: View {
 	@State private var showOptions = false
 	@State private var showAlbum = false
 	@Environment(\.dismiss) private var dismiss
-
+	
 	init(song: Song) {
 		_viewModel = State(initialValue: PlayerViewModel(song: song))
 	}
-
+	
 	var body: some View {
 		VStack(spacing: 0) {
-			headerView
-
 			Spacer()
-
+			
 			albumImageView
-
+			
 			Spacer()
-
+			
 			footerView
 				.padding(.horizontal, 24)
 				.padding(.bottom, 33)
 		}
 		.frame(maxWidth: .infinity)
 		.background(Color.appBackground)
-		.toolbar(.hidden, for: .navigationBar)
+		.navigationBarBackButtonHidden(true)
+		.navigationTitle(viewModel.song.collectionName)
+		.navigationBarTitleDisplayMode(.inline)
+		.toolbarColorScheme(.dark, for: .navigationBar)
+		.toolbarBackground(Color.appBackground, for: .navigationBar)
+		.toolbar {
+			ToolbarItem(placement: .topBarLeading) {
+				backNavButton
+			}
+			ToolbarItem(placement: .topBarTrailing) {
+				optionNavButton
+			}
+		}
 		.task {
 			await viewModel.loadAlbum()
 		}
@@ -55,25 +65,10 @@ struct PlayerView: View {
 		.navigationDestination(isPresented: $showAlbum) {
 			if let album = viewModel.album {
 				AlbumView(album: album, songs: viewModel.albumSongs)
+			} else {
+				EmptyView()
 			}
 		}
-	}
-}
-
-// MARK: - Header
-extension PlayerView {
-	private var headerView: some View {
-		HStack {
-			backNavButton
-			Spacer()
-			Text(viewModel.song.collectionName)
-				.font(.custom("ArticulatCF-DemiBold", size: 16))
-				.foregroundStyle(Color.appPrimaryText)
-				.lineLimit(1)
-			Spacer()
-			optionNavButton
-		}
-		.padding(.horizontal, 10)
 	}
 }
 
@@ -96,7 +91,7 @@ extension PlayerView {
 				Spacer()
 				
 				Button {
-					viewModel.playOrPause()
+					viewModel.setRepeat()
 				} label: {
 					Image(.repeatIcon)
 				}
@@ -124,8 +119,11 @@ extension PlayerView {
 			dismiss()
 		} label: {
 			Image(.backNavButton)
-				.glassEffect(.clear, in: Circle())
+				.resizable()
+				.scaledToFit()
+				.frame(width: 36, height: 36)
 		}
+		.buttonStyle(.plain)
 	}
 	
 	private var optionNavButton: some View {
@@ -133,8 +131,11 @@ extension PlayerView {
 			showOptions = true
 		} label: {
 			Image(.optionNavButton)
-				.glassEffect(.clear, in: Circle())
+				.resizable()
+				.scaledToFit()
+				.frame(width: 36, height: 36)
 		}
+		.buttonStyle(.plain)
 	}
 	
 	private var backwardButton: some View {
@@ -223,6 +224,8 @@ extension PlayerView {
 		releaseDate: "2013-04-19T07:00:00Z"
 	)
 	container.mainContext.insert(song)
-	return PlayerView(song: song)
-		.modelContainer(container)
+	return NavigationStack {
+		PlayerView(song: song)
+	}
+	.modelContainer(container)
 }

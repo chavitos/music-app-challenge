@@ -9,6 +9,7 @@ import Foundation
 import AVFoundation
 
 @Observable
+@MainActor
 final class PlayerViewModel {
 
 	// MARK: - State

@@ -9,6 +9,7 @@ import Foundation
 import SwiftData
 
 @Observable
+@MainActor
 final class HomeViewModel {
 	
 	// MARK: - State
@@ -23,7 +24,8 @@ final class HomeViewModel {
 	
 	private let provider: SongsProviding
 	private let modelContext: ModelContext
-	
+	private var lastSearchTerm: String?
+
 	// MARK: - Init
 	
 	init(provider: SongsProviding, modelContext: ModelContext) {
@@ -35,7 +37,11 @@ final class HomeViewModel {
 	
 	func searchSongs() async {
 		let trimmed = searchText.trimmingCharacters(in: .whitespaces)
-		
+
+		// Skip if already loaded for this exact term — prevents re-render on navigation back
+		guard trimmed != lastSearchTerm else { return }
+		lastSearchTerm = trimmed
+
 		guard !trimmed.isEmpty else {
 			loadRecentlyPlayed()
 			return
@@ -71,146 +77,6 @@ final class HomeViewModel {
 	
 	private func loadRecentlyPlayed() {
 		songs = [
-			Song(
-				trackId: 617154366,
-				artistId: 5468295,
-				collectionId: 617154241,
-				trackName: "Get Lucky",
-				artistName: "Daft Punk feat. Pharrell Williams",
-				collectionName: "Random Access Memories",
-				artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/100x100bb.jpg",
-				previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/d4/d3/1e/d4d31eb4-7405-b806-8346-3c52ad5b4cf4/mzaf_8095545455942962509.plus.aac.p.m4a",
-				trackTimeMillis: 369629,
-				trackNumber: 8,
-				discNumber: 1,
-				releaseDate: "2013-04-19T07:00:00Z"
-			),
-			Song(
-				trackId: 617154366,
-				artistId: 5468295,
-				collectionId: 617154241,
-				trackName: "Get Lucky",
-				artistName: "Daft Punk feat. Pharrell Williams",
-				collectionName: "Random Access Memories",
-				artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/100x100bb.jpg",
-				previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/d4/d3/1e/d4d31eb4-7405-b806-8346-3c52ad5b4cf4/mzaf_8095545455942962509.plus.aac.p.m4a",
-				trackTimeMillis: 369629,
-				trackNumber: 8,
-				discNumber: 1,
-				releaseDate: "2013-04-19T07:00:00Z"
-			),
-			Song(
-				trackId: 617154366,
-				artistId: 5468295,
-				collectionId: 617154241,
-				trackName: "Get Lucky",
-				artistName: "Daft Punk feat. Pharrell Williams",
-				collectionName: "Random Access Memories",
-				artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/100x100bb.jpg",
-				previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/d4/d3/1e/d4d31eb4-7405-b806-8346-3c52ad5b4cf4/mzaf_8095545455942962509.plus.aac.p.m4a",
-				trackTimeMillis: 369629,
-				trackNumber: 8,
-				discNumber: 1,
-				releaseDate: "2013-04-19T07:00:00Z"
-			),
-			Song(
-				trackId: 617154366,
-				artistId: 5468295,
-				collectionId: 617154241,
-				trackName: "Get Lucky",
-				artistName: "Daft Punk feat. Pharrell Williams",
-				collectionName: "Random Access Memories",
-				artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/100x100bb.jpg",
-				previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/d4/d3/1e/d4d31eb4-7405-b806-8346-3c52ad5b4cf4/mzaf_8095545455942962509.plus.aac.p.m4a",
-				trackTimeMillis: 369629,
-				trackNumber: 8,
-				discNumber: 1,
-				releaseDate: "2013-04-19T07:00:00Z"
-			),
-			Song(
-				trackId: 617154366,
-				artistId: 5468295,
-				collectionId: 617154241,
-				trackName: "Get Lucky",
-				artistName: "Daft Punk feat. Pharrell Williams",
-				collectionName: "Random Access Memories",
-				artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/100x100bb.jpg",
-				previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/d4/d3/1e/d4d31eb4-7405-b806-8346-3c52ad5b4cf4/mzaf_8095545455942962509.plus.aac.p.m4a",
-				trackTimeMillis: 369629,
-				trackNumber: 8,
-				discNumber: 1,
-				releaseDate: "2013-04-19T07:00:00Z"
-			),
-			Song(
-				trackId: 617154366,
-				artistId: 5468295,
-				collectionId: 617154241,
-				trackName: "Get Lucky",
-				artistName: "Daft Punk feat. Pharrell Williams",
-				collectionName: "Random Access Memories",
-				artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/100x100bb.jpg",
-				previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/d4/d3/1e/d4d31eb4-7405-b806-8346-3c52ad5b4cf4/mzaf_8095545455942962509.plus.aac.p.m4a",
-				trackTimeMillis: 369629,
-				trackNumber: 8,
-				discNumber: 1,
-				releaseDate: "2013-04-19T07:00:00Z"
-			),
-			Song(
-				trackId: 617154366,
-				artistId: 5468295,
-				collectionId: 617154241,
-				trackName: "Get Lucky",
-				artistName: "Daft Punk feat. Pharrell Williams",
-				collectionName: "Random Access Memories",
-				artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/100x100bb.jpg",
-				previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/d4/d3/1e/d4d31eb4-7405-b806-8346-3c52ad5b4cf4/mzaf_8095545455942962509.plus.aac.p.m4a",
-				trackTimeMillis: 369629,
-				trackNumber: 8,
-				discNumber: 1,
-				releaseDate: "2013-04-19T07:00:00Z"
-			),
-			Song(
-				trackId: 617154366,
-				artistId: 5468295,
-				collectionId: 617154241,
-				trackName: "Get Lucky",
-				artistName: "Daft Punk feat. Pharrell Williams",
-				collectionName: "Random Access Memories",
-				artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/100x100bb.jpg",
-				previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/d4/d3/1e/d4d31eb4-7405-b806-8346-3c52ad5b4cf4/mzaf_8095545455942962509.plus.aac.p.m4a",
-				trackTimeMillis: 369629,
-				trackNumber: 8,
-				discNumber: 1,
-				releaseDate: "2013-04-19T07:00:00Z"
-			),
-			Song(
-				trackId: 617154366,
-				artistId: 5468295,
-				collectionId: 617154241,
-				trackName: "Get Lucky",
-				artistName: "Daft Punk feat. Pharrell Williams",
-				collectionName: "Random Access Memories",
-				artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/100x100bb.jpg",
-				previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/d4/d3/1e/d4d31eb4-7405-b806-8346-3c52ad5b4cf4/mzaf_8095545455942962509.plus.aac.p.m4a",
-				trackTimeMillis: 369629,
-				trackNumber: 8,
-				discNumber: 1,
-				releaseDate: "2013-04-19T07:00:00Z"
-			),
-			Song(
-				trackId: 617154366,
-				artistId: 5468295,
-				collectionId: 617154241,
-				trackName: "Get Lucky",
-				artistName: "Daft Punk feat. Pharrell Williams",
-				collectionName: "Random Access Memories",
-				artworkUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e8/43/5f/e8435ffa-b6b9-b171-40ab-4ff3959ab661/886443919266.jpg/100x100bb.jpg",
-				previewUrl: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/d4/d3/1e/d4d31eb4-7405-b806-8346-3c52ad5b4cf4/mzaf_8095545455942962509.plus.aac.p.m4a",
-				trackTimeMillis: 369629,
-				trackNumber: 8,
-				discNumber: 1,
-				releaseDate: "2013-04-19T07:00:00Z"
-			),
 			Song(
 				trackId: 617154366,
 				artistId: 5468295,

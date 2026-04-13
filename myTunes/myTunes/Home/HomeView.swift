@@ -37,11 +37,6 @@ struct HomeView: View {
 				guard !Task.isCancelled else { return }
 				await viewModel.searchSongs()
 			}
-			.onAppear {
-				Task {
-					await viewModel.searchSongs()
-				}
-			}
 			.searchable(
 				text: $viewModel.searchText,
 				placement: .navigationBarDrawer(displayMode: .automatic),
