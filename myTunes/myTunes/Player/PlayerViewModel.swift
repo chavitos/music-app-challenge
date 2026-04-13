@@ -18,6 +18,7 @@ final class PlayerViewModel {
 	var isRepeating = false
 	var currentTime: TimeInterval = 0
 	var duration: TimeInterval = 0
+	var album: Album?
 
 	// MARK: - Private
 
@@ -25,6 +26,8 @@ final class PlayerViewModel {
 	nonisolated(unsafe) private var player: AVPlayer?
 	@ObservationIgnored
 	nonisolated(unsafe) private var timeObserver: Any?
+	@ObservationIgnored
+	private let provider: any SongsProviding = RemoteSongsProvider()
 
 	// MARK: - Computed
 
@@ -74,6 +77,15 @@ final class PlayerViewModel {
 
 	func setRepeat() {
 		// TODO: Implement
+	}
+
+	func loadAlbum() async {
+		do {
+			let response = try await provider.loadAlbum(collectionId: song.collectionId)
+			album = response.results.first(where: { $0.isCollection })?.toAlbum()
+		} catch {
+			// Silently fail — "View album" simply won't be available
+		}
 	}
 
 	// MARK: - Private

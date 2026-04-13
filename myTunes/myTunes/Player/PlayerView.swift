@@ -10,22 +10,24 @@ import SwiftData
 
 struct PlayerView: View {
 	@State private var viewModel: PlayerViewModel
+	@State private var showOptions = false
+	@State private var showAlbum = false
 	@Environment(\.dismiss) private var dismiss
-	
+
 	init(song: Song) {
 		_viewModel = State(initialValue: PlayerViewModel(song: song))
 	}
-	
+
 	var body: some View {
 		VStack(spacing: 0) {
 			headerView
-			
+
 			Spacer()
-			
+
 			albumImageView
-			
+
 			Spacer()
-			
+
 			footerView
 				.padding(.horizontal, 24)
 				.padding(.bottom, 33)
@@ -34,7 +36,26 @@ struct PlayerView: View {
 		.background(Color.appBackground)
 		.toolbar(.hidden, for: .navigationBar)
 		.task {
-			//			viewModel.playOrPause()
+			await viewModel.loadAlbum()
+		}
+		.sheet(isPresented: $showOptions) {
+			OptionsBottomSheet(song: viewModel.song, album: viewModel.album) {
+				showOptions = false
+				showAlbum = true
+			}
+			.presentationDetents([.height(192)])
+			.presentationDragIndicator(.visible)
+			.presentationCornerRadius(16)
+			.presentationBackground {
+				ZStack {
+					Color.appBackground.opacity(0.8)
+				}
+			}
+		}
+		.navigationDestination(isPresented: $showAlbum) {
+			if let album = viewModel.album {
+				AlbumView(album: album)
+			}
 		}
 	}
 }
@@ -109,7 +130,7 @@ extension PlayerView {
 	
 	private var optionNavButton: some View {
 		Button {
-			// TODO: Show options bottom sheet
+			showOptions = true
 		} label: {
 			Image(.optionNavButton)
 				.glassEffect(.clear, in: Circle())
@@ -145,8 +166,7 @@ extension PlayerView {
 		Button {
 			viewModel.setRepeat()
 		} label: {
-			Image(.playIcon)
-				.glassEffect(.clear, in: Circle())
+			Image(.repeatIcon)
 		}
 	}
 }
