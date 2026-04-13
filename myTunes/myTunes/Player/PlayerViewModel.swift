@@ -19,6 +19,7 @@ final class PlayerViewModel {
 	var currentTime: TimeInterval = 0
 	var duration: TimeInterval = 0
 	var album: Album?
+	var albumSongs: [Song] = []
 
 	// MARK: - Private
 
@@ -83,6 +84,7 @@ final class PlayerViewModel {
 		do {
 			let response = try await provider.loadAlbum(collectionId: song.collectionId)
 			album = response.results.first(where: { $0.isCollection })?.toAlbum()
+			albumSongs = response.results.compactMap { $0.toSong() }
 		} catch {
 			// Silently fail — "View album" simply won't be available
 		}
