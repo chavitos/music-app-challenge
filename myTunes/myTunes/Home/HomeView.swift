@@ -28,9 +28,9 @@ struct HomeView: View {
 					viewModel.selectSong(song)
 				}
 			}
-			.padding(.leading, 24)
-			.padding(.trailing, 16)
-			.padding(.top, 8)
+			.contentMargins(.leading, 24, for: .scrollContent)
+			.contentMargins(.trailing, 16, for: .scrollContent)
+			.contentMargins(.top, 8, for: .scrollContent)
 			.navigationTitle("Songs")
 			.task(id: viewModel.searchText) {
 				try? await Task.sleep(for: .milliseconds(300))
