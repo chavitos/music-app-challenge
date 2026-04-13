@@ -54,7 +54,7 @@ struct PlayerView: View {
 		}
 		.navigationDestination(isPresented: $showAlbum) {
 			if let album = viewModel.album {
-				AlbumView(album: album)
+				AlbumView(album: album, songs: viewModel.albumSongs)
 			}
 		}
 	}

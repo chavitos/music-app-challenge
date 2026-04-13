@@ -9,9 +9,9 @@ import SwiftUI
 
 struct SongItemView: View {
 	private var song: Song
-	private var onTapSongOptions: () -> Void
+	private var onTapSongOptions: (() -> Void)?
 
-	init(song: Song, onTapSongOptions: @escaping () -> Void) {
+	init(song: Song, onTapSongOptions: (() -> Void)? = nil) {
 		self.song = song
 		self.onTapSongOptions = onTapSongOptions
 	}
@@ -56,12 +56,14 @@ struct SongItemView: View {
 			}
 			Spacer()
 
-			Button {
-				onTapSongOptions()
-			} label: {
-				Image(.optionIcon)
+			if onTapSongOptions != nil {
+				Button {
+					onTapSongOptions?()
+				} label: {
+					Image(.optionIcon)
+				}
+				.buttonStyle(.borderless)
 			}
-			.buttonStyle(.borderless)
 		}
 		.listRowBackground(Color.appBackground)
 		.background(Color.appBackground)
