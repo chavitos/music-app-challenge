@@ -11,57 +11,36 @@ import SwiftData
 struct PlayerView: View {
 	@State private var viewModel: PlayerViewModel
 	@Environment(\.dismiss) private var dismiss
-
+	
 	init(song: Song) {
 		_viewModel = State(initialValue: PlayerViewModel(song: song))
 	}
-
+	
 	var body: some View {
 		VStack(spacing: 0) {
 			headerView
-
+			
 			Spacer()
-
+			
 			albumImageView
-
+			
 			Spacer()
-
-			VStack(alignment: .leading, spacing: 4) {
-				Text(viewModel.song.trackName)
-					.font(.custom("ArticulatCF-DemiBold", size: 32))
-					.fontWeight(.semibold)
-					.multilineTextAlignment(.center)
-					.foregroundColor(Color.appPrimaryText)
-
-				HStack {
-					Text(viewModel.song.artistName)
-						.font(.custom("ArticulatCF-Medium", size: 16))
-						.fontWeight(.medium)
-						.foregroundColor(Color.appPrimaryText.opacity(0.7))
-					Spacer()
-					Image(.repeatIcon)
-				}
-				
-				Button {
-					viewModel.playOrPause()
-				} label: {
-					Image(systemName: viewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-						.font(.system(size: 64))
-						.symbolRenderingMode(.hierarchical)
-				}
-			}
-			.padding(.horizontal, 24)
+			
+			footerView
+				.padding(.horizontal, 24)
+				.padding(.bottom, 33)
 		}
 		.frame(maxWidth: .infinity)
 		.background(Color.appBackground)
 		.toolbar(.hidden, for: .navigationBar)
 		.task {
-//			viewModel.playOrPause()
+			//			viewModel.playOrPause()
 		}
 	}
+}
 
-	// MARK: - Header
-
+// MARK: - Header
+extension PlayerView {
 	private var headerView: some View {
 		HStack {
 			backNavButton
@@ -75,7 +54,50 @@ struct PlayerView: View {
 		}
 		.padding(.horizontal, 10)
 	}
+}
 
+// MARK: - Footer
+extension PlayerView {
+	private var footerView: some View {
+		VStack(alignment: .leading, spacing: 4) {
+			Text(viewModel.song.trackName)
+				.font(.custom("ArticulatCF-DemiBold", size: 32))
+				.fontWeight(.semibold)
+				.multilineTextAlignment(.center)
+				.foregroundColor(Color.appPrimaryText)
+			
+			HStack {
+				Text(viewModel.song.artistName)
+					.font(.custom("ArticulatCF-Medium", size: 16))
+					.fontWeight(.medium)
+					.foregroundColor(Color.appPrimaryText.opacity(0.7))
+				
+				Spacer()
+				
+				Button {
+					viewModel.playOrPause()
+				} label: {
+					Image(.repeatIcon)
+				}
+			}
+			.padding(.bottom, 24)
+			
+			HStack {
+				Spacer()
+				backwardButton
+				
+				playButton
+					.padding(.horizontal, 28)
+				
+				forwardButton
+				Spacer()
+			}
+		}
+	}
+}
+
+// MARK: - Buttons
+extension PlayerView {
 	private var backNavButton: some View {
 		Button {
 			dismiss()
@@ -84,7 +106,7 @@ struct PlayerView: View {
 				.glassEffect(.clear, in: Circle())
 		}
 	}
-
+	
 	private var optionNavButton: some View {
 		Button {
 			// TODO: Show options bottom sheet
@@ -94,6 +116,43 @@ struct PlayerView: View {
 		}
 	}
 	
+	private var backwardButton: some View {
+		Button {
+			viewModel.previousSong()
+		} label: {
+			Image(.backwardIcon)
+		}
+	}
+	
+	private var forwardButton: some View {
+		Button {
+			viewModel.nextSong()
+		} label: {
+			Image(.forwardIcon)
+		}
+	}
+	
+	private var playButton: some View {
+		Button {
+			viewModel.playOrPause()
+		} label: {
+			Image(.playIcon)
+				.glassEffect(.clear, in: Circle())
+		}
+	}
+	
+	private var repeatButton: some View {
+		Button {
+			viewModel.setRepeat()
+		} label: {
+			Image(.playIcon)
+				.glassEffect(.clear, in: Circle())
+		}
+	}
+}
+
+// MARK: - Image
+extension PlayerView {
 	@ViewBuilder
 	private var albumImageView: some View {
 		if let url = viewModel.artworkURL {
