@@ -13,6 +13,7 @@ extension Color {
 	static let appBackground = Color(hex: 0x000000)
 	static let appPrimaryText = Color(hex: 0xFFFFFF)
 	static let appSecondaryText = Color(hex: 0x8E8E93)
+	static let appSubText = Color(hex: 0x737373)
 }
 
 // MARK: - Hex Init

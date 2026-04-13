@@ -18,61 +18,48 @@ struct SongItemView: View {
 
 	var body: some View {
 		HStack {
-			if let artworkUrl = URL(string: song.artworkUrl) {
-				AsyncImage(url: artworkUrl) { phase in
-					switch phase {
-						case .empty:
-							ProgressView()
-						case .success(let image):
-							image
-								.resizable()
-								.scaledToFit()
-								.frame(width: 52, height: 52)
-								.cornerRadius(8)
-								.padding(.trailing, 8)
-						case .failure:
-							Image(systemName: "music.note")
-								.resizable()
-								.scaledToFit()
-								.frame(width: 40, height: 40)
-								.cornerRadius(8)
-								.foregroundColor(.white)
-								.padding(.horizontal, 12)
-								.padding(.vertical, 12)
-						@unknown default:
-							EmptyView()
-					}
+			AsyncImage(url: URL(string: song.artworkUrl)) { phase in
+				switch phase {
+					case .empty:
+						ProgressView()
+					case .success(let image):
+						image
+							.resizable()
+							.scaledToFit()
+							.frame(width: 52, height: 52)
+							.cornerRadius(8)
+							.padding(.trailing, 8)
+					case .failure:
+						Image(systemName: "music.note")
+							.resizable()
+							.scaledToFit()
+							.frame(width: 40, height: 40)
+							.cornerRadius(8)
+							.foregroundColor(.white)
+							.padding(.horizontal, 12)
+							.padding(.vertical, 12)
+					@unknown default:
+						EmptyView()
 				}
-			} else {
-				Image(systemName: "music.note")
-					.resizable()
-					.scaledToFit()
-					.frame(width: 40, height: 40)
-					.cornerRadius(8)
-					.foregroundColor(.white)
-					.padding(.horizontal, 12)
-					.padding(.vertical, 12)
 			}
 
 			VStack(alignment: .leading) {
 				Text(song.trackName)
-					.font(.custom("Articulat CF Medium", size: 16))
+					.font(.custom("ArticulatCF-Medium", size: 16))
 					.fontWeight(.medium)
 					.foregroundColor(Color.appPrimaryText)
-					.padding(.bottom, 4)
+				
 				Text(song.artistName)
 					.font(.custom("ArticulatCF-Medium", size: 12))
 					.fontWeight(.medium)
-					.foregroundColor(Color.appSecondaryText)
+					.foregroundColor(Color.appSubText)
 			}
 			Spacer()
 
 			Button {
 				onTapSongOptions()
 			} label: {
-				Text("...")
-					.fontWeight(.bold)
-					.foregroundColor(Color.appSecondaryText)
+				Image(.optionIcon)
 			}
 			.buttonStyle(.borderless)
 		}

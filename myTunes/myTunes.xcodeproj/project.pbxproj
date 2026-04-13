@@ -29,9 +29,36 @@
 		DD51B1A62F8BFD1C00CB62A4 /* myTunesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = myTunesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DD80D1D62F8C7B09008CC921 /* Exceptions for "myTunesUITests" folder in "myTunesTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				myTunesTests.swift,
+			);
+			target = DD51B19B2F8BFD1C00CB62A4 /* myTunesTests */;
+		};
+		DD80D1D72F8C7B09008CC921 /* Exceptions for "myTunesUITests" folder in "myTunesUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				myTunesTests.swift,
+			);
+			target = DD51B1A52F8BFD1C00CB62A4 /* myTunesUITests */;
+		};
+		DD80D1E32F8C7B80008CC921 /* Exceptions for "myTunes" folder in "myTunes" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DD51B18C2F8BFD1A00CB62A4 /* myTunes */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DD51B18F2F8BFD1A00CB62A4 /* myTunes */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DD80D1E32F8C7B80008CC921 /* Exceptions for "myTunes" folder in "myTunes" target */,
+			);
 			path = myTunes;
 			sourceTree = "<group>";
 		};
@@ -42,6 +69,10 @@
 		};
 		DD51B1A92F8BFD1C00CB62A4 /* myTunesUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DD80D1D62F8C7B09008CC921 /* Exceptions for "myTunesUITests" folder in "myTunesTests" target */,
+				DD80D1D72F8C7B09008CC921 /* Exceptions for "myTunesUITests" folder in "myTunesUITests" target */,
+			);
 			path = myTunesUITests;
 			sourceTree = "<group>";
 		};
@@ -401,6 +432,7 @@
 				DEVELOPMENT_TEAM = 5Y5KPADL48;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = myTunes/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = myTunes;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -441,6 +473,7 @@
 				DEVELOPMENT_TEAM = 5Y5KPADL48;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = myTunes/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = myTunes;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

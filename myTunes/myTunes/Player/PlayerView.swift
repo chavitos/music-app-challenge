@@ -18,67 +18,108 @@ struct PlayerView: View {
 
 	var body: some View {
 		VStack(spacing: 0) {
-			Spacer()
-
-			AsyncImage(url: viewModel.artworkURL) { image in
-				image
-					.resizable()
-					.aspectRatio(contentMode: .fit)
-			} placeholder: {
-				RoundedRectangle(cornerRadius: 8)
-					.fill(.gray.opacity(0.3))
-			}
-			.frame(width: 280, height: 280)
-			.clipShape(RoundedRectangle(cornerRadius: 8))
+			headerView
 
 			Spacer()
-				.frame(height: 40)
 
-			VStack(spacing: 6) {
+			albumImageView
+
+			Spacer()
+
+			VStack(alignment: .leading, spacing: 4) {
 				Text(viewModel.song.trackName)
-					.font(.title2)
-					.fontWeight(.bold)
+					.font(.custom("ArticulatCF-DemiBold", size: 32))
+					.fontWeight(.semibold)
+					.multilineTextAlignment(.center)
+					.foregroundColor(Color.appPrimaryText)
 
-				Text(viewModel.song.artistName)
-					.font(.body)
-					.foregroundStyle(.secondary)
+				HStack {
+					Text(viewModel.song.artistName)
+						.font(.custom("ArticulatCF-Medium", size: 16))
+						.fontWeight(.medium)
+						.foregroundColor(Color.appPrimaryText.opacity(0.7))
+					Spacer()
+					Image(.repeatIcon)
+				}
+				
+				Button {
+					viewModel.playOrPause()
+				} label: {
+					Image(systemName: viewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+						.font(.system(size: 64))
+						.symbolRenderingMode(.hierarchical)
+				}
 			}
-
-			Spacer()
-				.frame(height: 48)
-
-			Button {
-				viewModel.playOrPause()
-			} label: {
-				Image(systemName: viewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-					.font(.system(size: 64))
-					.symbolRenderingMode(.hierarchical)
-			}
-
-			Spacer()
+			.padding(.horizontal, 24)
 		}
 		.frame(maxWidth: .infinity)
-		.navigationTitle(viewModel.song.collectionName)
-		.navigationBarTitleDisplayMode(.inline)
-		.navigationBarBackButtonHidden(true)
-		.toolbar {
-			ToolbarItem(placement: .topBarLeading) {
-				Button {
-					dismiss()
-				} label: {
-					Image(systemName: "chevron.left")
-				}
-			}
-			ToolbarItem(placement: .topBarTrailing) {
-				Button {
-					// TODO: Show options bottom sheet
-				} label: {
-					Image(systemName: "ellipsis")
-				}
-			}
-		}
+		.background(Color.appBackground)
+		.toolbar(.hidden, for: .navigationBar)
 		.task {
-			viewModel.playOrPause()
+//			viewModel.playOrPause()
+		}
+	}
+
+	// MARK: - Header
+
+	private var headerView: some View {
+		HStack {
+			backNavButton
+			Spacer()
+			Text(viewModel.song.collectionName)
+				.font(.custom("ArticulatCF-DemiBold", size: 16))
+				.foregroundStyle(Color.appPrimaryText)
+				.lineLimit(1)
+			Spacer()
+			optionNavButton
+		}
+		.padding(.horizontal, 10)
+	}
+
+	private var backNavButton: some View {
+		Button {
+			dismiss()
+		} label: {
+			Image(.backNavButton)
+				.glassEffect(.clear, in: Circle())
+		}
+	}
+
+	private var optionNavButton: some View {
+		Button {
+			// TODO: Show options bottom sheet
+		} label: {
+			Image(.optionNavButton)
+				.glassEffect(.clear, in: Circle())
+		}
+	}
+	
+	@ViewBuilder
+	private var albumImageView: some View {
+		if let url = viewModel.artworkURL {
+			AsyncImage(url: url) { phase in
+				switch phase {
+					case .empty:
+						ProgressView()
+					case .success(let image):
+						image
+							.resizable()
+							.scaledToFit()
+					case .failure:
+						Image(systemName: "music.note")
+							.resizable()
+							.scaledToFit()
+					@unknown default:
+						EmptyView()
+				}
+			}
+			.frame(width: 280, height: 280)
+			.clipShape(RoundedRectangle(cornerRadius: 32))
+		} else {
+			Image(systemName: "music.note")
+				.foregroundColor(.white)
+				.frame(width: 280, height: 280)
+				.clipShape(RoundedRectangle(cornerRadius: 32))
 		}
 	}
 }
@@ -103,8 +144,6 @@ struct PlayerView: View {
 		releaseDate: "2013-04-19T07:00:00Z"
 	)
 	container.mainContext.insert(song)
-	return NavigationStack {
-		PlayerView(song: song)
-	}
-	.modelContainer(container)
+	return PlayerView(song: song)
+		.modelContainer(container)
 }
