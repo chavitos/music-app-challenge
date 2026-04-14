@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import SwiftData
 
 @Observable
 @MainActor
@@ -30,6 +31,7 @@ final class PlayerViewModel {
 	nonisolated(unsafe) private var timeObserver: Any?
 	@ObservationIgnored
 	private let provider: any SongsProviding = RemoteSongsProvider()
+	private let modelContext: ModelContext
 
 	// MARK: - Computed
 
@@ -40,8 +42,9 @@ final class PlayerViewModel {
 
 	// MARK: - Init
 
-	init(song: Song) {
+	init(song: Song, modelContext: ModelContext) {
 		self.song = song
+		self.modelContext = modelContext
 		self.duration = Double(song.trackTimeMillis) / 1000.0
 	}
 
@@ -81,13 +84,45 @@ final class PlayerViewModel {
 		// TODO: Implement
 	}
 
+	func markAsPlayed() {
+		let id = song.trackId
+		let descriptor = FetchDescriptor<Song>(predicate: #Predicate { $0.trackId == id })
+		if let existing = try? modelContext.fetch(descriptor).first {
+			existing.lastPlayedAt = .now
+		} else {
+			song.lastPlayedAt = .now
+			modelContext.insert(song)
+		}
+		try? modelContext.save()
+	}
+
+	func saveAlbumToCache() {
+		guard let album, !albumSongs.isEmpty else { return }
+		modelContext.insert(album)
+		for albumSong in albumSongs {
+			modelContext.insert(albumSong)
+		}
+		try? modelContext.save()
+	}
+
 	func loadAlbum() async {
 		do {
 			let response = try await provider.loadAlbum(collectionId: song.collectionId)
 			album = response.results.first(where: { $0.isCollection })?.toAlbum()
 			albumSongs = response.results.compactMap { $0.toSong() }
 		} catch {
-			// Silently fail — "View album" simply won't be available
+			// Fallback to SwiftData cache
+			let id = song.collectionId
+			let albumDescriptor = FetchDescriptor<Album>(
+				predicate: #Predicate { $0.collectionId == id }
+			)
+			album = try? modelContext.fetch(albumDescriptor).first
+
+			let songsDescriptor = FetchDescriptor<Song>(
+				predicate: #Predicate { $0.collectionId == id },
+				sortBy: [SortDescriptor(\.trackNumber)]
+			)
+			albumSongs = (try? modelContext.fetch(songsDescriptor)) ?? []
 		}
 	}
 

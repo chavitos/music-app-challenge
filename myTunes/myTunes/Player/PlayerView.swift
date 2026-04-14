@@ -13,9 +13,9 @@ struct PlayerView: View {
 	@State private var showOptions = false
 	@State private var showAlbum = false
 	@Environment(\.dismiss) private var dismiss
-	
-	init(song: Song) {
-		_viewModel = State(initialValue: PlayerViewModel(song: song))
+
+	init(song: Song, modelContext: ModelContext) {
+		_viewModel = State(initialValue: PlayerViewModel(song: song, modelContext: modelContext))
 	}
 	
 	var body: some View {
@@ -47,11 +47,13 @@ struct PlayerView: View {
 		}
 		.task {
 			await viewModel.loadAlbum()
+			viewModel.markAsPlayed()
 		}
 		.sheet(isPresented: $showOptions) {
 			OptionsBottomSheet(song: viewModel.song, album: viewModel.album) {
 				showOptions = false
 				showAlbum = true
+				viewModel.saveAlbumToCache()
 			}
 			.presentationDetents([.height(192)])
 			.presentationDragIndicator(.visible)
@@ -225,7 +227,7 @@ extension PlayerView {
 	)
 	container.mainContext.insert(song)
 	return NavigationStack {
-		PlayerView(song: song)
+		PlayerView(song: song, modelContext: container.mainContext)
 	}
 	.modelContainer(container)
 }
