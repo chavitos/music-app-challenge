@@ -193,7 +193,7 @@ final class PlayerViewModel {
 		player = AVPlayer(playerItem: playerItem)
 
 		timeObserver = player?.addPeriodicTimeObserver(
-			forInterval: CMTime(seconds: 0.5, preferredTimescale: 600),
+			forInterval: CMTime(seconds: 1.0, preferredTimescale: 600),
 			queue: .main
 		) { [weak self] time in
 			guard let self else { return }

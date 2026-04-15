@@ -135,7 +135,7 @@ extension PlayerView {
 					}
 				}
 			)
-			.tint(Color.appPrimaryText)
+			.tint(Color.white.opacity(0.6))
 
 			HStack {
 				Text(viewModel.formattedCurrentTime)
