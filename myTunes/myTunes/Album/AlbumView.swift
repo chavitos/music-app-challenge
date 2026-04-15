@@ -55,17 +55,17 @@ struct AlbumView: View {
 				case .empty:
 					RoundedRectangle(cornerRadius: 24)
 						.fill(Color.appSecondaryText.opacity(0.2))
-						.frame(width: 240, height: 240)
+						.frame(width: 120, height: 120)
 				case .success(let image):
 					image
 						.resizable()
 						.scaledToFit()
-						.frame(width: 240, height: 240)
+						.frame(width: 120, height: 120)
 						.clipShape(RoundedRectangle(cornerRadius: 24))
 				case .failure:
 					RoundedRectangle(cornerRadius: 24)
 						.fill(Color.appSecondaryText.opacity(0.2))
-						.frame(width: 240, height: 240)
+						.frame(width: 120, height: 120)
 						.overlay {
 							Image(systemName: "music.note")
 								.font(.system(size: 48))

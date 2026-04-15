@@ -33,7 +33,7 @@ struct SongItemView: View {
 						Image(systemName: "music.note")
 							.resizable()
 							.scaledToFit()
-							.frame(width: 40, height: 40)
+							.frame(width: 40, height: 30)
 							.cornerRadius(8)
 							.foregroundColor(.white)
 							.padding(.horizontal, 12)

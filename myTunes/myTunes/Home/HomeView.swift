@@ -10,6 +10,8 @@ import SwiftData
 
 struct HomeView: View {
 	@State private var viewModel: HomeViewModel
+	@State private var showOptions = false
+	@State private var showAlbum = false
 	@Environment(\.modelContext) private var modelContext
 
 	init(viewModel: HomeViewModel) {
@@ -21,7 +23,8 @@ struct HomeView: View {
 			List {
 				ForEach(viewModel.songs) { song in
 					SongItemView(song: song) {
-						print("options tapped")
+						viewModel.songForOptions = song
+						showOptions = true
 					}
 					.listRowSeparator(.hidden)
 					.listRowInsets(EdgeInsets())
@@ -61,6 +64,9 @@ struct HomeView: View {
 				guard !Task.isCancelled else { return }
 				await viewModel.searchSongs()
 			}
+			.task(id: viewModel.songForOptions?.trackId) {
+				await viewModel.loadAlbumForOptions()
+			}
 			.searchable(
 				text: $viewModel.searchText,
 				placement: .navigationBarDrawer(displayMode: .automatic),
@@ -69,14 +75,37 @@ struct HomeView: View {
 			.navigationDestination(item: $viewModel.selectedSong) { song in
 				PlayerView(song: song, modelContext: modelContext, songList: viewModel.songs)
 			}
+			.navigationDestination(isPresented: $showAlbum) {
+				if let album = viewModel.albumForOptions {
+					AlbumView(album: album, songs: viewModel.albumSongsForOptions)
+				}
+			}
 			.listStyle(.plain)
 			.scrollContentBackground(.hidden)
 			.scrollIndicators(.hidden)
 			.background(Color.appBackground)
 			.toolbarColorScheme(.dark, for: .navigationBar)
 			.toolbarBackground(Color.appBackground, for: .navigationBar)
+			.sheet(isPresented: $showOptions) {
+				if let song = viewModel.songForOptions {
+					OptionsBottomSheet(song: song, album: viewModel.albumForOptions) {
+						showOptions = false
+						showAlbum = true
+						viewModel.saveAlbumForOptionsToCache()
+					}
+					.presentationDetents([.height(192)])
+					.presentationDragIndicator(.visible)
+					.presentationCornerRadius(16)
+					.presentationBackground {
+						ZStack {
+							Color.appBackground.opacity(0.8)
+						}
+					}
+				}
+			}
 		}
 		.preferredColorScheme(.dark)
+		.networkAware()
 	}
 
 	private var emptyStateView: some View {

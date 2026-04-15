@@ -22,6 +22,12 @@ final class HomeViewModel {
 	var errorMessage: String?
 	var hasMorePages: Bool { songs.count < allFetchedSongs.count }
 
+	// MARK: - Options / Album State
+
+	var songForOptions: Song?
+	var albumForOptions: Album?
+	var albumSongsForOptions: [Song] = []
+
 	// MARK: - Dependencies
 
 	private let provider: SongsProviding
@@ -54,6 +60,13 @@ final class HomeViewModel {
 			resetPagination()
 			hasSearched = false
 			loadRecentlyPlayed()
+			return
+		}
+
+		guard NetworkMonitor.shared.isConnected else {
+			errorMessage = "No internet connection. Please check your network and try again."
+			hasSearched = true
+			lastSearchTerm = nil
 			return
 		}
 
@@ -93,6 +106,33 @@ final class HomeViewModel {
 
 	func selectSong(_ song: Song) {
 		selectedSong = song
+	}
+
+	func loadAlbumForOptions() async {
+		guard let song = songForOptions else { return }
+		do {
+			let response = try await provider.loadAlbum(collectionId: song.collectionId)
+			albumForOptions = response.results.first(where: { $0.isCollection })?.toAlbum()
+			albumSongsForOptions = response.results.compactMap { $0.toSong() }
+		} catch {
+			let id = song.collectionId
+			let albumDescriptor = FetchDescriptor<Album>(predicate: #Predicate { $0.collectionId == id })
+			albumForOptions = try? modelContext.fetch(albumDescriptor).first
+			let songsDescriptor = FetchDescriptor<Song>(
+				predicate: #Predicate { $0.collectionId == id },
+				sortBy: [SortDescriptor(\.trackNumber)]
+			)
+			albumSongsForOptions = (try? modelContext.fetch(songsDescriptor)) ?? []
+		}
+	}
+
+	func saveAlbumForOptionsToCache() {
+		guard let album = albumForOptions, !albumSongsForOptions.isEmpty else { return }
+		modelContext.insert(album)
+		for song in albumSongsForOptions {
+			modelContext.insert(song)
+		}
+		try? modelContext.save()
 	}
 
 	// MARK: - Private

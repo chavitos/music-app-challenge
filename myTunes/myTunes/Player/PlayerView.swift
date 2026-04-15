@@ -36,6 +36,7 @@ struct PlayerView: View {
 		}
 		.frame(maxWidth: .infinity)
 		.background(Color.appBackground)
+		.networkAware()
 		.navigationBarBackButtonHidden(true)
 		.navigationTitle(viewModel.song.collectionName)
 		.navigationBarTitleDisplayMode(.inline)
