@@ -18,6 +18,7 @@ final class HomeViewModel {
 	var searchText = ""
 	var selectedSong: Song?
 	var isLoading = false
+	var hasSearched = false
 	var errorMessage: String?
 	var hasMorePages: Bool { songs.count < allFetchedSongs.count }
 
@@ -51,11 +52,13 @@ final class HomeViewModel {
 
 		guard !trimmed.isEmpty else {
 			resetPagination()
+			hasSearched = false
 			loadRecentlyPlayed()
 			return
 		}
 
 		isLoading = true
+		hasSearched = false
 		errorMessage = nil
 
 		do {
@@ -77,6 +80,7 @@ final class HomeViewModel {
 		}
 
 		isLoading = false
+		hasSearched = true
 	}
 
 	func loadNextPage() {

@@ -49,7 +49,9 @@ struct HomeView: View {
 			.contentMargins(.trailing, 16, for: .scrollContent)
 			.contentMargins(.top, 8, for: .scrollContent)
 			.overlay {
-				if viewModel.songs.isEmpty && !viewModel.isLoading {
+				if viewModel.isLoading {
+					LoadingIndicatorView(size: 32, text: "Searching...")
+				} else if viewModel.songs.isEmpty {
 					emptyStateView
 				}
 			}
@@ -78,13 +80,15 @@ struct HomeView: View {
 	}
 
 	private var emptyStateView: some View {
-		VStack(spacing: 16) {
+		let trimmed = viewModel.searchText.trimmingCharacters(in: .whitespaces)
+		let message = (viewModel.hasSearched && !trimmed.isEmpty)
+			? "No results for \"\(trimmed)\""
+			: "Search for your favorite songs"
+		return VStack(spacing: 16) {
 			Image(systemName: "music.note.list")
 				.font(.system(size: 48))
 				.foregroundStyle(Color.appSecondaryText)
-			Text(viewModel.searchText.trimmingCharacters(in: .whitespaces).isEmpty
-				 ? "Search for your favorite songs"
-				 : "No results for \"\(viewModel.searchText.trimmingCharacters(in: .whitespaces))\"")
+			Text(message)
 				.font(.custom("ArticulatCF-Medium", size: 16))
 				.foregroundStyle(Color.appSecondaryText)
 				.multilineTextAlignment(.center)
