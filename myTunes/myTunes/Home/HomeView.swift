@@ -65,7 +65,7 @@ struct HomeView: View {
 				prompt: "Search"
 			)
 			.navigationDestination(item: $viewModel.selectedSong) { song in
-				PlayerView(song: song, modelContext: modelContext)
+				PlayerView(song: song, modelContext: modelContext, songList: viewModel.songs)
 			}
 			.listStyle(.plain)
 			.scrollContentBackground(.hidden)

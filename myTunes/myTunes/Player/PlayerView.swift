@@ -14,18 +14,22 @@ struct PlayerView: View {
 	@State private var showAlbum = false
 	@Environment(\.dismiss) private var dismiss
 
-	init(song: Song, modelContext: ModelContext) {
-		_viewModel = State(initialValue: PlayerViewModel(song: song, modelContext: modelContext))
+	init(song: Song, modelContext: ModelContext, songList: [Song] = []) {
+		_viewModel = State(initialValue: PlayerViewModel(
+			song: song,
+			modelContext: modelContext,
+			songList: songList
+		))
 	}
-	
+
 	var body: some View {
 		VStack(spacing: 0) {
 			Spacer()
-			
+
 			albumImageView
-			
+
 			Spacer()
-			
+
 			footerView
 				.padding(.horizontal, 24)
 				.padding(.bottom, 33)
@@ -83,15 +87,15 @@ extension PlayerView {
 				.fontWeight(.semibold)
 				.multilineTextAlignment(.center)
 				.foregroundColor(Color.appPrimaryText)
-			
+
 			HStack {
 				Text(viewModel.song.artistName)
 					.font(.custom("ArticulatCF-Medium", size: 16))
 					.fontWeight(.medium)
 					.foregroundColor(Color.appPrimaryText.opacity(0.7))
-				
+
 				Spacer()
-				
+
 				Button {
 					viewModel.setRepeat()
 				} label: {
@@ -99,16 +103,48 @@ extension PlayerView {
 				}
 			}
 			.padding(.bottom, 24)
-			
+
+			sliderView
+				.padding(.bottom, 24)
+
 			HStack {
 				Spacer()
 				backwardButton
-				
+
 				playButton
 					.padding(.horizontal, 28)
-				
+
 				forwardButton
 				Spacer()
+			}
+		}
+	}
+}
+
+// MARK: - Slider
+extension PlayerView {
+	private var sliderView: some View {
+		VStack(spacing: 4) {
+			Slider(
+				value: $viewModel.currentTime,
+				in: 0...max(viewModel.duration, 1),
+				onEditingChanged: { editing in
+					viewModel.isSeeking = editing
+					if !editing {
+						viewModel.seek(to: viewModel.currentTime)
+					}
+				}
+			)
+			.tint(Color.appPrimaryText)
+
+			HStack {
+				Text(viewModel.formattedCurrentTime)
+					.font(.custom("ArticulatCF-Medium", size: 12))
+					.foregroundStyle(Color.appSecondaryText)
+				Spacer()
+				Text(viewModel.formattedRemainingTime)
+					.font(.custom("ArticulatCF-Medium", size: 12))
+					.foregroundStyle(Color.appSecondaryText)
 			}
 		}
 	}
@@ -127,7 +163,7 @@ extension PlayerView {
 		}
 		.buttonStyle(.plain)
 	}
-	
+
 	private var optionNavButton: some View {
 		Button {
 			showOptions = true
@@ -139,32 +175,36 @@ extension PlayerView {
 		}
 		.buttonStyle(.plain)
 	}
-	
+
 	private var backwardButton: some View {
 		Button {
 			viewModel.previousSong()
 		} label: {
 			Image(.backwardIcon)
 		}
+		.disabled(!viewModel.canGoPrevious)
+		.opacity(viewModel.canGoPrevious ? 1.0 : 0.4)
 	}
-	
+
 	private var forwardButton: some View {
 		Button {
 			viewModel.nextSong()
 		} label: {
 			Image(.forwardIcon)
 		}
+		.disabled(!viewModel.canGoNext)
+		.opacity(viewModel.canGoNext ? 1.0 : 0.4)
 	}
-	
+
 	private var playButton: some View {
 		Button {
 			viewModel.playOrPause()
 		} label: {
-			Image(.playIcon)
+			Image(viewModel.isPlaying ? .pauseIcon : .playIcon)
 				.glassEffect(.clear, in: Circle())
 		}
 	}
-	
+
 	private var repeatButton: some View {
 		Button {
 			viewModel.setRepeat()
