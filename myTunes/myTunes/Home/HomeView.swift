@@ -88,14 +88,13 @@ struct HomeView: View {
 			.toolbarBackground(Color.appBackground, for: .navigationBar)
 			.sheet(isPresented: $showOptions) {
 				if let song = viewModel.songForOptions {
-					OptionsBottomSheet(song: song, album: viewModel.albumForOptions) {
+					OptionsBottomSheet(song: song) {
 						showOptions = false
 						showAlbum = true
 						viewModel.saveAlbumForOptionsToCache()
 					}
 					.presentationDetents([.height(192)])
-					.presentationDragIndicator(.visible)
-					.presentationCornerRadius(.cornerRadiusM)
+					.presentationDragIndicator(.hidden)
 					.presentationBackground {
 						ZStack {
 							Color.appBackground.opacity(0.8)

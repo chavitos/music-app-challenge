@@ -55,14 +55,13 @@ struct PlayerView: View {
 			viewModel.markAsPlayed()
 		}
 		.sheet(isPresented: $showOptions) {
-			OptionsBottomSheet(song: viewModel.song, album: viewModel.album) {
+			OptionsBottomSheet(song: viewModel.song) {
 				showOptions = false
 				showAlbum = true
 				viewModel.saveAlbumToCache()
 			}
 			.presentationDetents([.height(192)])
-			.presentationDragIndicator(.visible)
-			.presentationCornerRadius(.cornerRadiusM)
+			.presentationDragIndicator(.hidden)
 			.presentationBackground {
 				ZStack {
 					Color.appBackground.opacity(0.8)
