@@ -12,6 +12,9 @@ struct HomeView: View {
 	@State private var viewModel: HomeViewModel
 	@State private var showOptions = false
 	@State private var showAlbum = false
+	@State private var isSearchBarHidden = false
+	@State private var isSearchPresented = false
+	@State private var restingContentTop: CGFloat?
 	@Environment(\.modelContext) private var modelContext
 
 	init(viewModel: HomeViewModel) {
@@ -20,37 +23,60 @@ struct HomeView: View {
 
 	var body: some View {
 		NavigationStack {
-			List {
-				ForEach(viewModel.songs) { song in
-					SongItemView(song: song) {
-						viewModel.songForOptions = song
-						showOptions = true
+			ScrollView {
+				ZStack {
+					LazyVStack(spacing: 0) {
+						ForEach(viewModel.songs) { song in
+							SongItemView(song: song) {
+								viewModel.songForOptions = song
+								showOptions = true
+							}
+							.padding(.bottom, .spacingL)
+							.onTapGesture {
+								viewModel.selectSong(song)
+							}
+							.onAppear {
+								if song.trackId == viewModel.songs.last?.trackId {
+									viewModel.loadNextPage()
+								}
+							}
+						}
+						if viewModel.hasMorePages {
+							HStack {
+								Spacer()
+								ProgressView()
+								Spacer()
+							}
+						}
 					}
-					.listRowSeparator(.hidden)
-					.listRowInsets(EdgeInsets())
-					.padding(.bottom, .spacingL)
-					.onTapGesture {
-						viewModel.selectSong(song)
+					.padding(.leading, .spacingXL)
+					.padding(.trailing, .spacingL)
+					.padding(.top, .spacingS)
+					GeometryReader { proxy in
+						let offset = proxy.frame(in: .named("scroll")).minY
+						Color.clear.preference(
+							key: ScrollContentTopKey.self,
+							value: offset
+						)
 					}
-					.onAppear {
-						if song.trackId == viewModel.songs.last?.trackId {
-							viewModel.loadNextPage()
+				}
+			}
+			.coordinateSpace(name: "scroll")
+			.onPreferenceChange(ScrollContentTopKey.self) { topY in
+				if restingContentTop == nil {
+					restingContentTop = topY
+				}
+				if let resting = restingContentTop {
+					let scrolledAmount = resting - topY
+					let shouldHide = scrolledAmount > 1
+					if shouldHide != isSearchBarHidden {
+						withAnimation(.easeInOut(duration: 0.2)) {
+							isSearchBarHidden = shouldHide
 						}
 					}
 				}
-				if viewModel.hasMorePages {
-					HStack {
-						Spacer()
-						ProgressView()
-						Spacer()
-					}
-					.listRowBackground(Color.appBackground)
-					.listRowSeparator(.hidden)
-				}
 			}
-			.contentMargins(.leading, .spacingXL, for: .scrollContent)
-			.contentMargins(.trailing, .spacingL, for: .scrollContent)
-			.contentMargins(.top, .spacingS, for: .scrollContent)
+			.scrollIndicators(.hidden)
 			.overlay {
 				if viewModel.isLoading {
 					LoadingIndicatorView(size: 32, text: "Searching...")
@@ -69,9 +95,22 @@ struct HomeView: View {
 			}
 			.searchable(
 				text: $viewModel.searchText,
+				isPresented: $isSearchPresented,
 				placement: .navigationBarDrawer(displayMode: .automatic),
 				prompt: "Search"
 			)
+			.toolbar {
+				if isSearchBarHidden && !isSearchPresented {
+					ToolbarItem(placement: .topBarLeading) {
+						Button {
+							isSearchPresented = true
+						} label: {
+							Image(systemName: "magnifyingglass")
+								.foregroundStyle(.white)
+						}
+					}
+				}
+			}
 			.navigationDestination(item: $viewModel.selectedSong) { song in
 				PlayerView(song: song, modelContext: modelContext, songList: viewModel.songs)
 			}
@@ -80,9 +119,6 @@ struct HomeView: View {
 					AlbumView(album: album, songs: viewModel.albumSongsForOptions)
 				}
 			}
-			.listStyle(.plain)
-			.scrollContentBackground(.hidden)
-			.scrollIndicators(.hidden)
 			.background(Color.appBackground)
 			.toolbarColorScheme(.dark, for: .navigationBar)
 			.toolbarBackground(Color.appBackground, for: .navigationBar)
@@ -123,6 +159,13 @@ struct HomeView: View {
 				.padding(.horizontal, .spacing2XL)
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
+	}
+}
+
+private struct ScrollContentTopKey: PreferenceKey {
+	static var defaultValue: CGFloat = 0
+	static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+		value = nextValue()
 	}
 }
 

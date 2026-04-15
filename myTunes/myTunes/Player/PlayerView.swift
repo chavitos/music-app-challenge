@@ -219,7 +219,7 @@ extension PlayerView {
 	@ViewBuilder
 	private var albumImageView: some View {
 		if let url = viewModel.artworkURL {
-			AsyncImage(url: url) { phase in
+			CachedAsyncImage(url: url) { phase in
 				switch phase {
 					case .empty:
 						ProgressView()
@@ -231,8 +231,6 @@ extension PlayerView {
 						Image(systemName: "music.note")
 							.resizable()
 							.scaledToFit()
-					@unknown default:
-						EmptyView()
 				}
 			}
 			.frame(width: .artworkPlayerCover, height: .artworkPlayerCover)

@@ -18,7 +18,7 @@ struct SongItemView: View {
 
 	var body: some View {
 		HStack {
-			AsyncImage(url: URL(string: song.artworkUrl)) { phase in
+			CachedAsyncImage(url: URL(string: song.artworkUrl)) { phase in
 				switch phase {
 					case .empty:
 						ProgressView()
@@ -38,8 +38,6 @@ struct SongItemView: View {
 							.foregroundColor(.white)
 							.padding(.horizontal, .spacingM)
 							.padding(.vertical, .spacingM)
-					@unknown default:
-						EmptyView()
 				}
 			}
 

@@ -50,7 +50,7 @@ struct AlbumView: View {
 	// MARK: - Artwork
 
 	private var artworkView: some View {
-		AsyncImage(url: artworkURL) { phase in
+		CachedAsyncImage(url: artworkURL) { phase in
 			switch phase {
 				case .empty:
 					RoundedRectangle(cornerRadius: .cornerRadiusL)
@@ -68,8 +68,6 @@ struct AlbumView: View {
 								.font(.system(size: .iconSizeLarge))
 								.foregroundStyle(Color.appSecondaryText)
 						}
-				@unknown default:
-					EmptyView()
 			}
 		}
 		.frame(width: .artworkAlbumCover, height: .artworkAlbumCover)
