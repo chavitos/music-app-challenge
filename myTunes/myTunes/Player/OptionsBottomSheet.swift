@@ -11,28 +11,28 @@ struct OptionsBottomSheet: View {
 	let song: Song
 	let album: Album?
 	let onViewAlbum: () -> Void
-	
+
 	var body: some View {
-		VStack(alignment: .center, spacing: 4) {
+		VStack(alignment: .center, spacing: .spacingXS) {
 			Text(song.trackName)
-				.font(.custom("ArticulatCF-Bold", size: 18))
+				.font(.appSheetTitle)
 				.fontWeight(.bold)
 				.foregroundStyle(Color.appPrimaryText)
 				.padding(.top, 10)
-			
+
 			Text(song.artistName)
-				.font(.custom("ArticulatCF-Medium", size: 14))
+				.font(.appCaption)
 				.fontWeight(.medium)
 				.foregroundStyle(Color.appPrimaryText)
-			
+
 			Spacer()
-			
+
 			Button(action: onViewAlbum) {
-				HStack(spacing: 12) {
+				HStack(spacing: .spacingM) {
 					Image(.albumIcon)
-					
+
 					Text("View \(album?.collectionName ?? "album")")
-						.font(.custom("ArticulatCF-Medium", size: 16))
+						.font(.appBody)
 						.fontWeight(.medium)
 						.foregroundStyle(Color.appPrimaryText)
 					Spacer()

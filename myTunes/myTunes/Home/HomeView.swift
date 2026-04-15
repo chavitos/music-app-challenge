@@ -28,7 +28,7 @@ struct HomeView: View {
 					}
 					.listRowSeparator(.hidden)
 					.listRowInsets(EdgeInsets())
-					.padding(.bottom, 16)
+					.padding(.bottom, .spacingL)
 					.onTapGesture {
 						viewModel.selectSong(song)
 					}
@@ -48,9 +48,9 @@ struct HomeView: View {
 					.listRowSeparator(.hidden)
 				}
 			}
-			.contentMargins(.leading, 24, for: .scrollContent)
-			.contentMargins(.trailing, 16, for: .scrollContent)
-			.contentMargins(.top, 8, for: .scrollContent)
+			.contentMargins(.leading, .spacingXL, for: .scrollContent)
+			.contentMargins(.trailing, .spacingL, for: .scrollContent)
+			.contentMargins(.top, .spacingS, for: .scrollContent)
 			.overlay {
 				if viewModel.isLoading {
 					LoadingIndicatorView(size: 32, text: "Searching...")
@@ -95,7 +95,7 @@ struct HomeView: View {
 					}
 					.presentationDetents([.height(192)])
 					.presentationDragIndicator(.visible)
-					.presentationCornerRadius(16)
+					.presentationCornerRadius(.cornerRadiusM)
 					.presentationBackground {
 						ZStack {
 							Color.appBackground.opacity(0.8)
@@ -113,15 +113,15 @@ struct HomeView: View {
 		let message = (viewModel.hasSearched && !trimmed.isEmpty)
 			? "No results for \"\(trimmed)\""
 			: "Search for your favorite songs"
-		return VStack(spacing: 16) {
+		return VStack(spacing: .spacingL) {
 			Image(systemName: "music.note.list")
-				.font(.system(size: 48))
+				.font(.system(size: .iconSizeLarge))
 				.foregroundStyle(Color.appSecondaryText)
 			Text(message)
-				.font(.custom("ArticulatCF-Medium", size: 16))
+				.font(.appBody)
 				.foregroundStyle(Color.appSecondaryText)
 				.multilineTextAlignment(.center)
-				.padding(.horizontal, 32)
+				.padding(.horizontal, .spacing2XL)
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 	}

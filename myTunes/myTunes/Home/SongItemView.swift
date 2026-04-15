@@ -26,18 +26,18 @@ struct SongItemView: View {
 						image
 							.resizable()
 							.scaledToFit()
-							.frame(width: 52, height: 52)
-							.cornerRadius(8)
-							.padding(.trailing, 8)
+							.frame(width: .artworkSongRow, height: .artworkSongRow)
+							.cornerRadius(.cornerRadiusS)
+							.padding(.trailing, .spacingS)
 					case .failure:
 						Image(systemName: "music.note")
 							.resizable()
 							.scaledToFit()
 							.frame(width: 40, height: 30)
-							.cornerRadius(8)
+							.cornerRadius(.cornerRadiusS)
 							.foregroundColor(.white)
-							.padding(.horizontal, 12)
-							.padding(.vertical, 12)
+							.padding(.horizontal, .spacingM)
+							.padding(.vertical, .spacingM)
 					@unknown default:
 						EmptyView()
 				}
@@ -45,12 +45,12 @@ struct SongItemView: View {
 
 			VStack(alignment: .leading) {
 				Text(song.trackName)
-					.font(.custom("ArticulatCF-Medium", size: 16))
+					.font(.appBody)
 					.fontWeight(.medium)
 					.foregroundColor(Color.appPrimaryText)
-				
+
 				Text(song.artistName)
-					.font(.custom("ArticulatCF-Medium", size: 12))
+					.font(.appSmall)
 					.fontWeight(.medium)
 					.foregroundColor(Color.appSubText)
 			}
@@ -87,5 +87,5 @@ struct SongItemView: View {
 	)) {
 		print("action")
 	}
-	.padding(.horizontal, 8)
+	.padding(.horizontal, .spacingS)
 }

@@ -31,7 +31,7 @@ struct PlayerView: View {
 			Spacer()
 
 			footerView
-				.padding(.horizontal, 24)
+				.padding(.horizontal, .spacingXL)
 				.padding(.bottom, 33)
 		}
 		.frame(maxWidth: .infinity)
@@ -62,7 +62,7 @@ struct PlayerView: View {
 			}
 			.presentationDetents([.height(192)])
 			.presentationDragIndicator(.visible)
-			.presentationCornerRadius(16)
+			.presentationCornerRadius(.cornerRadiusM)
 			.presentationBackground {
 				ZStack {
 					Color.appBackground.opacity(0.8)
@@ -82,16 +82,16 @@ struct PlayerView: View {
 // MARK: - Footer
 extension PlayerView {
 	private var footerView: some View {
-		VStack(alignment: .leading, spacing: 4) {
+		VStack(alignment: .leading, spacing: .spacingXS) {
 			Text(viewModel.song.trackName)
-				.font(.custom("ArticulatCF-DemiBold", size: 32))
+				.font(.appTitle)
 				.fontWeight(.semibold)
 				.multilineTextAlignment(.center)
 				.foregroundColor(Color.appPrimaryText)
 
 			HStack {
 				Text(viewModel.song.artistName)
-					.font(.custom("ArticulatCF-Medium", size: 16))
+					.font(.appBody)
 					.fontWeight(.medium)
 					.foregroundColor(Color.appPrimaryText.opacity(0.7))
 
@@ -103,10 +103,10 @@ extension PlayerView {
 					Image(.repeatIcon)
 				}
 			}
-			.padding(.bottom, 24)
+			.padding(.bottom, .spacingXL)
 
 			sliderView
-				.padding(.bottom, 24)
+				.padding(.bottom, .spacingXL)
 
 			HStack {
 				Spacer()
@@ -125,7 +125,7 @@ extension PlayerView {
 // MARK: - Slider
 extension PlayerView {
 	private var sliderView: some View {
-		VStack(spacing: 4) {
+		VStack(spacing: .spacingXS) {
 			Slider(
 				value: $viewModel.currentTime,
 				in: 0...max(viewModel.duration, 1),
@@ -140,11 +140,11 @@ extension PlayerView {
 
 			HStack {
 				Text(viewModel.formattedCurrentTime)
-					.font(.custom("ArticulatCF-Medium", size: 12))
+					.font(.appSmall)
 					.foregroundStyle(Color.appSecondaryText)
 				Spacer()
 				Text(viewModel.formattedRemainingTime)
-					.font(.custom("ArticulatCF-Medium", size: 12))
+					.font(.appSmall)
 					.foregroundStyle(Color.appSecondaryText)
 			}
 		}
@@ -160,7 +160,7 @@ extension PlayerView {
 			Image(.backNavButton)
 				.resizable()
 				.scaledToFit()
-				.frame(width: 36, height: 36)
+				.frame(width: .navButtonSize, height: .navButtonSize)
 		}
 		.buttonStyle(.plain)
 	}
@@ -172,7 +172,7 @@ extension PlayerView {
 			Image(.optionNavButton)
 				.resizable()
 				.scaledToFit()
-				.frame(width: 36, height: 36)
+				.frame(width: .navButtonSize, height: .navButtonSize)
 		}
 		.buttonStyle(.plain)
 	}
@@ -236,13 +236,13 @@ extension PlayerView {
 						EmptyView()
 				}
 			}
-			.frame(width: 280, height: 280)
-			.clipShape(RoundedRectangle(cornerRadius: 32))
+			.frame(width: .artworkPlayerCover, height: .artworkPlayerCover)
+			.clipShape(RoundedRectangle(cornerRadius: .cornerRadiusXL))
 		} else {
 			Image(systemName: "music.note")
 				.foregroundColor(.white)
-				.frame(width: 280, height: 280)
-				.clipShape(RoundedRectangle(cornerRadius: 32))
+				.frame(width: .artworkPlayerCover, height: .artworkPlayerCover)
+				.clipShape(RoundedRectangle(cornerRadius: .cornerRadiusXL))
 		}
 	}
 }
