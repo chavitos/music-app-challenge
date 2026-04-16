@@ -41,7 +41,7 @@ final class PlayerViewModel {
 	@ObservationIgnored
 	nonisolated(unsafe) private var timeObserver: Any?
 	@ObservationIgnored
-	private let provider: any SongsProviding = RemoteSongsProvider()
+	private let provider: any SongsProviding
 	private let modelContext: ModelContext
 
 	// MARK: - Computed
@@ -61,10 +61,16 @@ final class PlayerViewModel {
 
 	// MARK: - Init
 
-	init(song: Song, modelContext: ModelContext, songList: [Song] = []) {
+	init(
+		song: Song,
+		modelContext: ModelContext,
+		songList: [Song] = [],
+		provider: any SongsProviding = RemoteSongsProvider()
+	) {
 		self.song = song
 		self.modelContext = modelContext
 		self.songList = songList
+		self.provider = provider
 		self.currentIndex = songList.firstIndex(where: { $0.trackId == song.trackId }) ?? 0
 		self.duration = Double(song.trackTimeMillis) / 1000.0
 	}

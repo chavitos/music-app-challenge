@@ -14,36 +14,15 @@
 			remoteGlobalIDString = DD51B18C2F8BFD1A00CB62A4;
 			remoteInfo = myTunes;
 		};
-		DD51B1A72F8BFD1C00CB62A4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DD51B1852F8BFD1A00CB62A4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DD51B18C2F8BFD1A00CB62A4;
-			remoteInfo = myTunes;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		DD51B18D2F8BFD1A00CB62A4 /* myTunes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = myTunes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD51B19C2F8BFD1C00CB62A4 /* myTunesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = myTunesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DD51B1A62F8BFD1C00CB62A4 /* myTunesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = myTunesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD80D29B2F90AC85008CC921 /* myTunes.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = myTunes.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		DD80D1D62F8C7B09008CC921 /* Exceptions for "myTunesUITests" folder in "myTunesTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				myTunesTests.swift,
-			);
-			target = DD51B19B2F8BFD1C00CB62A4 /* myTunesTests */;
-		};
-		DD80D1D72F8C7B09008CC921 /* Exceptions for "myTunesUITests" folder in "myTunesUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				myTunesTests.swift,
-			);
-			target = DD51B1A52F8BFD1C00CB62A4 /* myTunesUITests */;
-		};
 		DD80D1E32F8C7B80008CC921 /* Exceptions for "myTunes" folder in "myTunes" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -67,15 +46,6 @@
 			path = myTunesTests;
 			sourceTree = "<group>";
 		};
-		DD51B1A92F8BFD1C00CB62A4 /* myTunesUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				DD80D1D62F8C7B09008CC921 /* Exceptions for "myTunesUITests" folder in "myTunesTests" target */,
-				DD80D1D72F8C7B09008CC921 /* Exceptions for "myTunesUITests" folder in "myTunesUITests" target */,
-			);
-			path = myTunesUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,22 +63,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DD51B1A32F8BFD1C00CB62A4 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		DD51B1842F8BFD1A00CB62A4 = {
 			isa = PBXGroup;
 			children = (
+				DD80D29B2F90AC85008CC921 /* myTunes.xctestplan */,
 				DD51B18F2F8BFD1A00CB62A4 /* myTunes */,
 				DD51B19F2F8BFD1C00CB62A4 /* myTunesTests */,
-				DD51B1A92F8BFD1C00CB62A4 /* myTunesUITests */,
 				DD51B18E2F8BFD1A00CB62A4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -118,7 +81,6 @@
 			children = (
 				DD51B18D2F8BFD1A00CB62A4 /* myTunes.app */,
 				DD51B19C2F8BFD1C00CB62A4 /* myTunesTests.xctest */,
-				DD51B1A62F8BFD1C00CB62A4 /* myTunesUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -171,29 +133,6 @@
 			productReference = DD51B19C2F8BFD1C00CB62A4 /* myTunesTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		DD51B1A52F8BFD1C00CB62A4 /* myTunesUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DD51B1B62F8BFD1C00CB62A4 /* Build configuration list for PBXNativeTarget "myTunesUITests" */;
-			buildPhases = (
-				DD51B1A22F8BFD1C00CB62A4 /* Sources */,
-				DD51B1A32F8BFD1C00CB62A4 /* Frameworks */,
-				DD51B1A42F8BFD1C00CB62A4 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				DD51B1A82F8BFD1C00CB62A4 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				DD51B1A92F8BFD1C00CB62A4 /* myTunesUITests */,
-			);
-			name = myTunesUITests;
-			packageProductDependencies = (
-			);
-			productName = myTunesUITests;
-			productReference = DD51B1A62F8BFD1C00CB62A4 /* myTunesUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -208,10 +147,6 @@
 						CreatedOnToolsVersion = 26.4;
 					};
 					DD51B19B2F8BFD1C00CB62A4 = {
-						CreatedOnToolsVersion = 26.4;
-						TestTargetID = DD51B18C2F8BFD1A00CB62A4;
-					};
-					DD51B1A52F8BFD1C00CB62A4 = {
 						CreatedOnToolsVersion = 26.4;
 						TestTargetID = DD51B18C2F8BFD1A00CB62A4;
 					};
@@ -233,7 +168,6 @@
 			targets = (
 				DD51B18C2F8BFD1A00CB62A4 /* myTunes */,
 				DD51B19B2F8BFD1C00CB62A4 /* myTunesTests */,
-				DD51B1A52F8BFD1C00CB62A4 /* myTunesUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -247,13 +181,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DD51B19A2F8BFD1C00CB62A4 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DD51B1A42F8BFD1C00CB62A4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -277,13 +204,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DD51B1A22F8BFD1C00CB62A4 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -291,11 +211,6 @@
 			isa = PBXTargetDependency;
 			target = DD51B18C2F8BFD1A00CB62A4 /* myTunes */;
 			targetProxy = DD51B19D2F8BFD1C00CB62A4 /* PBXContainerItemProxy */;
-		};
-		DD51B1A82F8BFD1C00CB62A4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DD51B18C2F8BFD1A00CB62A4 /* myTunes */;
-			targetProxy = DD51B1A72F8BFD1C00CB62A4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -513,11 +428,15 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5Y5KPADL48;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.chavitos.myTunesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -535,57 +454,21 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5Y5KPADL48;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.com.chavitos.myTunesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/myTunes.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/myTunes";
-			};
-			name = Release;
-		};
-		DD51B1B72F8BFD1C00CB62A4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5Y5KPADL48;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = br.com.chavitos.myTunesUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = myTunes;
-			};
-			name = Debug;
-		};
-		DD51B1B82F8BFD1C00CB62A4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5Y5KPADL48;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = br.com.chavitos.myTunesUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = myTunes;
 			};
 			name = Release;
 		};
@@ -615,15 +498,6 @@
 			buildConfigurations = (
 				DD51B1B42F8BFD1C00CB62A4 /* Debug */,
 				DD51B1B52F8BFD1C00CB62A4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DD51B1B62F8BFD1C00CB62A4 /* Build configuration list for PBXNativeTarget "myTunesUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DD51B1B72F8BFD1C00CB62A4 /* Debug */,
-				DD51B1B82F8BFD1C00CB62A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

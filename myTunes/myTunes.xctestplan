@@ -1,0 +1,33 @@
+{
+  "configurations" : [
+    {
+      "id" : "09B58204-D1AE-4AF4-A72B-DB19E835CC19",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:myTunes.xcodeproj",
+      "identifier" : "DD51B18C2F8BFD1A00CB62A4",
+      "name" : "myTunes"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "selectedTags" : {
+        "includeXCTests" : true
+      },
+      "target" : {
+        "containerPath" : "container:myTunes.xcodeproj",
+        "identifier" : "DD51B19B2F8BFD1C00CB62A4",
+        "name" : "myTunesTests"
+      }
+    }
+  ],
+  "version" : 1
+}
