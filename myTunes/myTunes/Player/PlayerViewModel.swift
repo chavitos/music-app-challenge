@@ -24,6 +24,7 @@ final class PlayerViewModel {
 	var album: Album?
 	var albumSongs: [Song] = []
 	var albumLoadFailed = false
+	var songLoadFailed = false
 
 	// MARK: - Song List
 
@@ -78,18 +79,16 @@ final class PlayerViewModel {
 	// MARK: - Use Cases
 
 	func playOrPause() {
-		if player == nil {
-			setupPlayer()
+		if player != nil {
+			if isPlaying {
+				player?.pause()
+			} else {
+				player?.play()
+			}
+			isPlaying.toggle()
+			return
 		}
-
-		guard let player else { return }
-
-		if isPlaying {
-			player.pause()
-		} else {
-			player.play()
-		}
-		isPlaying.toggle()
+		Task { await setupAndPlay() }
 	}
 
 	func nextSong() {
@@ -191,10 +190,30 @@ final class PlayerViewModel {
 		Task { await loadAlbum() }
 	}
 
-	private func setupPlayer() {
+	private func setupAndPlay() async {
 		guard let urlString = song.previewUrl,
-			  let url = URL(string: urlString) else { return }
+			  let remoteURL = URL(string: urlString) else { return }
 
+		if let cachedURL = await SongPreviewCache.shared.localURL(for: remoteURL) {
+			createPlayer(url: cachedURL)
+		} else {
+			guard NetworkMonitor.shared.isConnected else {
+				songLoadFailed = true
+				return
+			}
+			createPlayer(url: remoteURL)
+			let url = remoteURL
+			Task {
+				guard let (data, _) = try? await URLSession.shared.data(from: url) else { return }
+				await SongPreviewCache.shared.store(data: data, for: url)
+			}
+		}
+
+		player?.play()
+		isPlaying = true
+	}
+
+	private func createPlayer(url: URL) {
 		let playerItem = AVPlayerItem(url: url)
 		player = AVPlayer(playerItem: playerItem)
 

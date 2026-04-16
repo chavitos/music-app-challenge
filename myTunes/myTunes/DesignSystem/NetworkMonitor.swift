@@ -31,6 +31,7 @@ final class NetworkMonitor {
 		}
 	}
 
+	@MainActor
 	func refreshStatus() {
 		connectivity = networkClient.currentStatus()
 	}

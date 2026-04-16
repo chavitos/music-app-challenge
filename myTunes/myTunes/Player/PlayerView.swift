@@ -13,6 +13,7 @@ struct PlayerView: View {
 	@State private var showOptions = false
 	@State private var showAlbum = false
 	@State private var showAlbumUnavailableAlert = false
+	@State private var showSongUnavailableAlert = false
 	@Environment(\.dismiss) private var dismiss
 
 	init(song: Song, modelContext: ModelContext, songList: [Song] = []) {
@@ -58,6 +59,17 @@ struct PlayerView: View {
 			Button("OK", role: .cancel) {}
 		} message: {
 			Text("No internet connection. This album isn't available offline.")
+		}
+		.alert("Song Unavailable", isPresented: $showSongUnavailableAlert) {
+			Button("OK", role: .cancel) {}
+		} message: {
+			Text("No internet connection. This song isn't available offline.")
+		}
+		.onChange(of: viewModel.songLoadFailed) { _, failed in
+			if failed {
+				showSongUnavailableAlert = true
+				viewModel.songLoadFailed = false
+			}
 		}
 		.sheet(isPresented: $showOptions) {
 			OptionsBottomSheet(song: viewModel.song) {
