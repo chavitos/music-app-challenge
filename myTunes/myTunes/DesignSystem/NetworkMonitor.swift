@@ -6,42 +6,36 @@
 import Network
 import Observation
 
-enum ConnectionChange {
-	case lost
-	case restored
-}
-
 @Observable
 @MainActor
 final class NetworkMonitor {
-	static let shared = NetworkMonitor()
+	static let shared = NetworkMonitor(client: .live)
 
-	var isConnected = true
-	var connectionChanged: ConnectionChange?
+	private(set) var connectivity: Connectivity = .online
+
+	var isConnected: Bool { connectivity == .online }
 
 	@ObservationIgnored
-	private let monitor = NWPathMonitor()
+	nonisolated(unsafe) private var monitorTask: Task<Void, Never>?
 
-	private init() {
-		monitor.pathUpdateHandler = { [weak self] path in
-			Task { @MainActor [weak self] in
-				guard let self else { return }
-				let wasConnected = self.isConnected
-				let nowConnected = path.status == .satisfied
+	@ObservationIgnored
+	private let networkClient: NetworkClient
 
-				self.isConnected = nowConnected
-
-				if wasConnected && !nowConnected {
-					self.connectionChanged = .lost
-				} else if !wasConnected && nowConnected {
-					self.connectionChanged = .restored
-				}
+	init(client: NetworkClient) {
+		self.networkClient = client
+		let stream = client.stream()
+		monitorTask = Task { @MainActor [weak self] in
+			for await status in stream {
+				self?.connectivity = status
 			}
 		}
-		monitor.start(queue: DispatchQueue(label: "NetworkMonitor"))
+	}
+
+	func refreshStatus() {
+		connectivity = networkClient.currentStatus()
 	}
 
 	deinit {
-		monitor.cancel()
+		monitorTask?.cancel()
 	}
 }

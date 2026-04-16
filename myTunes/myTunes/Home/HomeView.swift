@@ -12,6 +12,7 @@ struct HomeView: View {
 	@State private var viewModel: HomeViewModel
 	@State private var showOptions = false
 	@State private var showAlbum = false
+	@State private var showAlbumUnavailableAlert = false
 	@State private var isSearchBarHidden = false
 	@State private var isSearchPresented = false
 	@State private var restingContentTop: CGFloat?
@@ -23,7 +24,7 @@ struct HomeView: View {
 
 	var body: some View {
 		NavigationStack {
-			ScrollView {
+			ScrollView(.vertical) {
 				ZStack {
 					LazyVStack(spacing: 0) {
 						ForEach(viewModel.songs) { song in
@@ -76,6 +77,7 @@ struct HomeView: View {
 					}
 				}
 			}
+			.scrollBounceBehavior(.basedOnSize)
 			.scrollIndicators(.hidden)
 			.overlay {
 				if viewModel.isLoading {
@@ -110,6 +112,17 @@ struct HomeView: View {
 						}
 					}
 				}
+				if viewModel.errorMessage != nil {
+					ToolbarItem(placement: .principal) {
+						HStack(spacing: 6) {
+							Text("Songs")
+								.fontWeight(.semibold)
+							Image(systemName: "wifi.slash")
+								.font(.caption)
+						}
+						.foregroundStyle(.white)
+					}
+				}
 			}
 			.navigationDestination(item: $viewModel.selectedSong) { song in
 				PlayerView(song: song, modelContext: modelContext, songList: viewModel.songs)
@@ -122,12 +135,21 @@ struct HomeView: View {
 			.background(Color.appBackground)
 			.toolbarColorScheme(.dark, for: .navigationBar)
 			.toolbarBackground(Color.appBackground, for: .navigationBar)
+			.alert("Album Unavailable", isPresented: $showAlbumUnavailableAlert) {
+				Button("OK", role: .cancel) {}
+			} message: {
+				Text("No internet connection. This album isn't available offline.")
+			}
 			.sheet(isPresented: $showOptions) {
 				if let song = viewModel.songForOptions {
 					OptionsBottomSheet(song: song) {
 						showOptions = false
-						showAlbum = true
-						viewModel.saveAlbumForOptionsToCache()
+						if viewModel.albumLoadFailed {
+							showAlbumUnavailableAlert = true
+						} else {
+							showAlbum = true
+							viewModel.saveAlbumForOptionsToCache()
+						}
 					}
 					.presentationDetents([.height(192)])
 					.presentationDragIndicator(.hidden)
@@ -140,16 +162,23 @@ struct HomeView: View {
 			}
 		}
 		.preferredColorScheme(.dark)
-		.networkAware()
 	}
 
 	private var emptyStateView: some View {
 		let trimmed = viewModel.searchText.trimmingCharacters(in: .whitespaces)
-		let message = (viewModel.hasSearched && !trimmed.isEmpty)
-			? "No results for \"\(trimmed)\""
-			: "Search for your favorite songs"
+
+		let (icon, message): (String, String) = {
+			if viewModel.errorMessage != nil {
+				return ("wifi.slash", "No internet connection")
+			} else if viewModel.hasSearched && !trimmed.isEmpty {
+				return ("music.note.list", "No results for \"\(trimmed)\"")
+			} else {
+				return ("music.note.list", "Search for your favorite songs")
+			}
+		}()
+
 		return VStack(spacing: .spacingL) {
-			Image(systemName: "music.note.list")
+			Image(systemName: icon)
 				.font(.system(size: .iconSizeLarge))
 				.foregroundStyle(Color.appSecondaryText)
 			Text(message)

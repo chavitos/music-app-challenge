@@ -20,6 +20,7 @@ final class HomeViewModel {
 	var isLoading = false
 	var hasSearched = false
 	var errorMessage: String?
+
 	var hasMorePages: Bool { songs.count < allFetchedSongs.count }
 
 	// MARK: - Options / Album State
@@ -27,6 +28,7 @@ final class HomeViewModel {
 	var songForOptions: Song?
 	var albumForOptions: Album?
 	var albumSongsForOptions: [Song] = []
+	var albumLoadFailed = false
 
 	// MARK: - Dependencies
 
@@ -52,21 +54,14 @@ final class HomeViewModel {
 	func searchSongs() async {
 		let trimmed = searchText.trimmingCharacters(in: .whitespaces)
 
-		// Skip if already loaded for this exact term — prevents re-render on navigation back
 		guard trimmed != lastSearchTerm else { return }
 		lastSearchTerm = trimmed
 
 		guard !trimmed.isEmpty else {
 			resetPagination()
 			hasSearched = false
+			errorMessage = nil
 			loadRecentlyPlayed()
-			return
-		}
-
-		guard NetworkMonitor.shared.isConnected else {
-			errorMessage = "No internet connection. Please check your network and try again."
-			hasSearched = true
-			lastSearchTerm = nil
 			return
 		}
 
@@ -89,7 +84,9 @@ final class HomeViewModel {
 			currentPage = 0
 			songs = Array(allFetchedSongs.prefix(pageSize))
 		} catch {
-			errorMessage = error.localizedDescription
+			songs = []
+			let offline = isNetworkError(error)
+			errorMessage = offline ? "No internet connection" : "Something went wrong. Please try again."
 		}
 
 		isLoading = false
@@ -110,6 +107,7 @@ final class HomeViewModel {
 
 	func loadAlbumForOptions() async {
 		guard let song = songForOptions else { return }
+		albumLoadFailed = false
 		do {
 			let response = try await provider.loadAlbum(collectionId: song.collectionId)
 			albumForOptions = response.results.first(where: { $0.isCollection })?.toAlbum()
@@ -123,6 +121,10 @@ final class HomeViewModel {
 				sortBy: [SortDescriptor(\.trackNumber)]
 			)
 			albumSongsForOptions = (try? modelContext.fetch(songsDescriptor)) ?? []
+
+			if albumForOptions == nil {
+				albumLoadFailed = true
+			}
 		}
 	}
 
@@ -136,6 +138,18 @@ final class HomeViewModel {
 	}
 
 	// MARK: - Private
+
+	private func isNetworkError(_ error: Error) -> Bool {
+		if let urlError = error as? URLError {
+			switch urlError.code {
+			case .notConnectedToInternet, .networkConnectionLost, .timedOut, .cannotConnectToHost, .cannotFindHost:
+				return true
+			default:
+				return false
+			}
+		}
+		return !NetworkMonitor.shared.isConnected
+	}
 
 	private func loadRecentlyPlayed() {
 		var descriptor = FetchDescriptor<Song>(

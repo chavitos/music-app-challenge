@@ -23,6 +23,7 @@ final class PlayerViewModel {
 	var isSeeking = false
 	var album: Album?
 	var albumSongs: [Song] = []
+	var albumLoadFailed = false
 
 	// MARK: - Song List
 
@@ -144,6 +145,7 @@ final class PlayerViewModel {
 	}
 
 	func loadAlbum() async {
+		albumLoadFailed = false
 		do {
 			let response = try await provider.loadAlbum(collectionId: song.collectionId)
 			album = response.results.first(where: { $0.isCollection })?.toAlbum()
@@ -161,6 +163,10 @@ final class PlayerViewModel {
 				sortBy: [SortDescriptor(\.trackNumber)]
 			)
 			albumSongs = (try? modelContext.fetch(songsDescriptor)) ?? []
+
+			if album == nil {
+				albumLoadFailed = true
+			}
 		}
 	}
 

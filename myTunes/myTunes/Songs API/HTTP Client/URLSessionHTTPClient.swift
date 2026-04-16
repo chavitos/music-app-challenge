@@ -15,6 +15,7 @@ final class URLSessionHTTPClient: HTTPClient {
 	}
 	
 	public func data(from url: URL) async throws -> (Data, URLResponse) {
-		try await session.data(from: url)
+		let request = URLRequest(url: url, timeoutInterval: 10)
+		return try await session.data(for: request)
 	}
 }

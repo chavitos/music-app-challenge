@@ -63,7 +63,6 @@ struct SongItemView: View {
 				.buttonStyle(.borderless)
 			}
 		}
-		.listRowBackground(Color.appBackground)
 		.background(Color.appBackground)
 	}
 }

@@ -12,6 +12,7 @@ struct PlayerView: View {
 	@State private var viewModel: PlayerViewModel
 	@State private var showOptions = false
 	@State private var showAlbum = false
+	@State private var showAlbumUnavailableAlert = false
 	@Environment(\.dismiss) private var dismiss
 
 	init(song: Song, modelContext: ModelContext, songList: [Song] = []) {
@@ -36,7 +37,6 @@ struct PlayerView: View {
 		}
 		.frame(maxWidth: .infinity)
 		.background(Color.appBackground)
-		.networkAware()
 		.navigationBarBackButtonHidden(true)
 		.navigationTitle(viewModel.song.collectionName)
 		.navigationBarTitleDisplayMode(.inline)
@@ -54,11 +54,20 @@ struct PlayerView: View {
 			await viewModel.loadAlbum()
 			viewModel.markAsPlayed()
 		}
+		.alert("Album Unavailable", isPresented: $showAlbumUnavailableAlert) {
+			Button("OK", role: .cancel) {}
+		} message: {
+			Text("No internet connection. This album isn't available offline.")
+		}
 		.sheet(isPresented: $showOptions) {
 			OptionsBottomSheet(song: viewModel.song) {
 				showOptions = false
-				showAlbum = true
-				viewModel.saveAlbumToCache()
+				if viewModel.albumLoadFailed {
+					showAlbumUnavailableAlert = true
+				} else {
+					showAlbum = true
+					viewModel.saveAlbumToCache()
+				}
 			}
 			.presentationDetents([.height(192)])
 			.presentationDragIndicator(.hidden)
